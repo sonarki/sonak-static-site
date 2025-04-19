@@ -2,10 +2,121 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>소낙의 첫 웹사이트</title>
+  <title>소낙의 감도사 v1</title>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      text-align: center;
+      padding: 30px;
+      background: #f9f9f9;
+    }
+    h1 { color: #333; }
+    .input-group, .result-table {
+      margin: 20px auto;
+      max-width: 500px;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    select, button {
+      padding: 10px 15px;
+      border-radius: 6px;
+      border: none;
+      font-weight: bold;
+      margin: 10px 5px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
 </head>
 <body>
-  <h1>안녕하세요! 여긴 소낙의 공간입니다 😊</h1>
-  <p>이건 Vercel로 배포한 내 웹사이트야!</p>
+  <h1>소낙의 감도사 🎯</h1>
+  <div class="input-group">
+    <label>DPI 선택</label>
+    <select id="currentDPI">
+      <option value="400">400</option>
+      <option value="800" selected>800</option>
+      <option value="1200">1200</option>
+      <option value="1600">1600</option>
+      <option value="3200">3200</option>
+    </select>
+
+    <label>일반 감도</label>
+    <input type="number" id="general" placeholder="예: 30" />
+
+    <label>수직 감도</label>
+    <input type="number" id="vertical" placeholder="예: 0.9" />
+
+    <label>조준 감도</label>
+    <input type="number" id="aim" placeholder="예: 22" />
+
+    <label>스코프 감도</label>
+    <input type="number" id="scope" placeholder="예: 19" />
+
+    <button onclick="calculate()">감도 계산하기</button>
+  </div>
+
+  <div class="result-table" id="resultTable"></div>
+
+  <script>
+    const dpis = [400, 800, 1200, 1600, 3200];
+
+    function calculate() {
+      const baseDPI = parseInt(document.getElementById('currentDPI').value);
+      const general = parseFloat(document.getElementById('general').value);
+      const vertical = parseFloat(document.getElementById('vertical').value);
+      const aim = parseFloat(document.getElementById('aim').value);
+      const scope = parseFloat(document.getElementById('scope').value);
+
+      let tableHTML = `
+        <table>
+          <tr>
+            <th>DPI</th>
+            <th>일반</th>
+            <th>수직</th>
+            <th>조준</th>
+            <th>스코프</th>
+          </tr>
+      `;
+
+      dpis.forEach(dpi => {
+        const factor = dpi / baseDPI;
+        tableHTML += `
+          <tr>
+            <td>${dpi}</td>
+            <td>${(general * factor).toFixed(2)}</td>
+            <td>${(vertical * factor).toFixed(2)}</td>
+            <td>${(aim * factor).toFixed(2)}</td>
+            <td>${(scope * factor).toFixed(2)}</td>
+          </tr>
+        `;
+      });
+
+      tableHTML += `</table>`;
+      document.getElementById('resultTable').innerHTML = tableHTML;
+    }
+  </script>
 </body>
 </html>
